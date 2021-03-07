@@ -8,7 +8,7 @@ The container can be configured using environment variables. These are:
 
 | Variable              | Mandatory/Optional | Usage |
 | --------------------- | ------------------ | ----- |
-| RBL_HOSTS             | Mandatory          | The hosts you want to monitor, given either as IP-Address or as FQDN |
+| RBL_HOSTS             | Mandatory          | The hosts you want to monitor, given either as IP-Address or as FQDN. Multiple hosts have to be comma-separated |
 | RBL_PUSHOVER_TOKEN    | Mandatory          | Your pushover application token. May be aquired [here](https://pushover.net/apps/build) |
 | RBL_PUSHOVER_USER_KEY | Mandatory          | Your pushover user key |
 | RBL_INTERVAL          | Optional           | The interval in which the blacklists should be checked, given in minutes. Default: 60 |
