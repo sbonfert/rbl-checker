@@ -2,11 +2,8 @@ name: build our image
 
 on:
   push:
-    branches: master
-  tags:
-      - 'v*.*.*'
-  pull_request:
-
+    branches: main
+    
 jobs:
   build:
     runs-on: ubuntu-latest
