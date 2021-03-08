@@ -1,6 +1,6 @@
 # Realtime Blacklist (RBL) Checker
 
-This docker container regularly checks your email server against a number of RBL blacklists in a customizable interval. If your server is listed on one or more blacklists, it notifies you via pushover.
+This docker container regularly checks one or multiple email servers against a number of RBL blacklists in a customizable interval. If one of the specified server is listed on one or more blacklists, it sends a pushover notification.
 
 ## Usage
 
@@ -8,7 +8,7 @@ The container can be configured using environment variables. These are:
 
 | Variable              | Mandatory/Optional | Usage |
 | --------------------- | ------------------ | ----- |
-| RBL_HOSTS             | Mandatory          | The hosts you want to monitor, given either as IP-Address or as FQDN. Multiple hosts have to be comma-separated |
+| RBL_HOSTS             | Mandatory          | The hosts to monitor, given either as IP-Address or as FQDN. Multiple hosts have to be comma-separated |
 | RBL_PUSHOVER_TOKEN    | Mandatory          | Your pushover application token. May be aquired [here](https://pushover.net/apps/build) |
 | RBL_PUSHOVER_USER_KEY | Mandatory          | Your pushover user key |
 | RBL_INTERVAL          | Optional           | The interval in which the blacklists should be checked, given in minutes. Default: 60 |
