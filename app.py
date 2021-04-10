@@ -1,13 +1,13 @@
 import os
 import time
 
-import pushover
+import apprise
 import requests
 
 from rblchecker.listing import Listing
 from rblchecker.probe import Probe
 
-def sendPushMessage(client: pushover.Client, newListings: [Listing], obsoleteListings: [Listing]) -> None:
+def notify(appriseObject: apprise.Apprise, newListings: [Listing], obsoleteListings: [Listing]) -> None:
     message = ""
     if len(newListings) > 0:
         message += "There are new alerts:\n"
@@ -17,29 +17,29 @@ def sendPushMessage(client: pushover.Client, newListings: [Listing], obsoleteLis
         message += "The following alerts have been cleared:\n"
         for listing in obsoleteListings:
             message += listing.getDescription()
-    client.send_message(message, None, title="RBL Alert")
+    appriseObject.notify(body = message, title = "RBL Alert")
 
 
 def Main():
     print("RBLChecker started...")
 
-    # Get enviornment variables
+    # Get environment variables
     hosts = os.environ.get('RBL_HOSTS', "")  # Comma separated list
-    pushoverToken = os.environ.get('RBL_PUSHOVER_TOKEN', "")
-    pushoverUserKey = os.environ.get('RBL_PUSHOVER_USER_KEY', "")
+    appriseUrl = os.environ.get('RBL_APPRISE_URL', "")
     interval = os.environ.get('RBL_INTERVAL', 60)  # Given in minutes
     # May be used to report execution to a healthchecks server
     healthcheckUrl = os.environ.get('RBL_HEALTHCHECK_URL', "")
 
     # Make sure that all required variables are provided
-    if (hosts == "" or pushoverToken == "" or pushoverUserKey == ""):
-        print("Please supply RBL_HOSTS, RBL_PUSHOVER_TOKEN and RBL_PUSHOVER_USER_KEY as environment variables")
+    if (hosts == "" or appriseUrl == ""):
+        print("Please supply RBL_HOSTS and RBL_APPRISE_URL as environment variables")
         exit(1)
 
     try:
-        client = pushover.Client(pushoverUserKey, api_token=pushoverToken)
+        appriseObject = apprise.Apprise()
+        appriseObject.add(appriseUrl)
     except:
-        print("ERROR: Pushover login failed, please provide valid login credentials using the environment variables RBL_PUSHOVER_TOKEN and RBL_PUSHOVER_USER_KEY.")
+        print("ERROR: Apprise initialization failed. Please double-check your configuration.")
         print("Exiting...")
         exit(1)
 
@@ -53,7 +53,7 @@ def Main():
             (newListings, obsoleteListings) = probe.check()
 
             if len(newListings) > 0 or len(obsoleteListings) > 0:
-                sendPushMessage(client, newListings, obsoleteListings)
+                notify(appriseObject, newListings, obsoleteListings)
 
         # Checking done. Report health to healthcheck server
         if(healthcheckUrl != ""):
