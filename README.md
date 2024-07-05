@@ -19,6 +19,7 @@ The container can be configured using environment variables. These are:
 | RBL_APPRISE_URL       | Mandatory          | A string representing the notification endpoint. Format according to the [Apprise Documentation](https://github.com/caronc/apprise) |
 | RBL_INTERVAL          | Optional           | The interval in which the blacklists should be checked, given in minutes. Default: 60 |
 | RBL_HEALTHCHECK_URL   | Optional           | This URL is fetched (GET-request) after each execution to indicate, that the service was executed. This may be used in conjunction with e.g. [healthchecks.io](https://healthchecks.io). This is skipped, if the variable is not set |
+| RBL_DQS               | Optional           | Spamhaus DQS key. It is recommended to supply this value, as otherwise false-positives may occur. |
 
 ## Run as a docker container
 

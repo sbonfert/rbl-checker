@@ -27,7 +27,9 @@ def Main():
     hosts = os.environ.get('RBL_HOSTS', "")  # Comma separated list
     appriseUrl = os.environ.get('RBL_APPRISE_URL', "")
     interval = os.environ.get('RBL_INTERVAL', 60)  # Given in minutes
-    # May be used to report execution to a healthchecks server
+    # Optional: Spamhaus DQS
+    dqsKey = os.environ.get('RBL_DQS', "")
+    # Optional: report execution to a healthchecks server
     healthcheckUrl = os.environ.get('RBL_HEALTHCHECK_URL', "")
 
     # Make sure that all required variables are provided
@@ -45,7 +47,7 @@ def Main():
 
     probes = []
     for host in hosts.split(","):
-        probes.append(Probe(host))
+        probes.append(Probe(host, dqsKey))
 
     while True:
         for probe in probes:

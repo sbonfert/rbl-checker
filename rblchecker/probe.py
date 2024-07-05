@@ -4,10 +4,12 @@ from rblchecker.listing import Listing
 
 class Probe(object):
  
-    def __init__(self, host: str):
+    def __init__(self, host: str, dqsKey: str):
         self._hostToCheck = host
+        self._dqsKey = dqsKey
         self._ipsToCheck = self._resolveToIPs()
         self._listings = []
+        self.initializeRBLs()
     
     @property
     def host(self) -> str:
@@ -19,7 +21,7 @@ class Probe(object):
         currentListings = []
 
         for ip in self._ipsToCheck:
-            for bl in self.RBLS:
+            for bl in self.RBLs:
                 try:
                     reply = dns.resolver.resolve(self._generateLookupUrl(ip,bl), 'A')
                     # If this point is reached, the IP address was listed
@@ -87,62 +89,62 @@ class Probe(object):
         """Given an IP address and a dnsbl, generates a valid lookup address (RFC5782)"""
 
         return ".".join(ip_address(ip).reverse_pointer.split('.')[0:-2]) + '.' + dnsbl
-
-    RBLS = [
-        'zombie.dnsbl.sorbs.net',
-        'ix.dnsbl.manitu.net',
-        'bl.spamcop.net',
-        'dsn.rfc-ignorant.org',
-        'multi.surbl.org',
-        'blackholes.five-ten-sg.com',
-        'sorbs.dnsbl.net.au',
-        'dnsbl.sorbs.net',
-        'zen.spamhaus.org',
-        'db.wpbl.info',
-        'rmst.dnsbl.net.au',
-        'dnsbl.kempt.net',
-        'blacklist.woody.ch',
-        'psbl.surriel.com',
-        'virbl.bit.nl',
-        'virus.rbl.jp',
-        'wormrbl.imp.ch',
-        'spamrbl.imp.ch',
-        'rbl.interserver.net',
-        'spamlist.or.kr',
-        'dyna.spamrats.com',
-        'dnsbl.abuse.ch',
-        'dnsbl.inps.de',
-        'dnsbl.dronebl.org',
-        'bl.deadbeef.com',
-        'ricn.dnsbl.net.au',
-        'forbidden.icm.edu.pl',
-        'probes.dnsbl.net.au',
-        'ubl.unsubscore.com',
-        'b.barracudacentral.org',
-        'ksi.dnsbl.net.au',
-        'uribl.swinog.ch',
-        'bsb.spamlookup.net',
-        'dob.sibl.support-intelligence.net',
-        'url.rbl.jp',
-        'dyndns.rbl.jp',
-        'bogons.cymru.com',
-        'relays.mail-abuse.org',
-        'omrs.dnsbl.net.au',
-        'osrs.dnsbl.net.au',
-        'orvedb.aupads.org',
-        'relays.nether.net',
-        'relays.bl.gweep.ca',
-        'smtp.dnsbl.sorbs.net',
-        'relays.bl.kundenserver.de',
-        'dialups.mail-abuse.org',
-        'rdts.dnsbl.net.au',
-        'spam.dnsbl.sorbs.net',
-        'duinv.aupads.org',
-        'dynablock.sorbs.net',
-        'dynip.rothen.com',
-        'short.rbl.jp',
-        'korea.services.net',
-        'mail.people.it',
-        'blacklist.sci.kun.nl',
-        'all.spamblock.unit.liu.se'
-    ]
+    def initializeRBLs(self):
+        self.RBLs = [
+            'zombie.dnsbl.sorbs.net',
+            'ix.dnsbl.manitu.net',
+            'bl.spamcop.net',
+            'dsn.rfc-ignorant.org',
+            'multi.surbl.org',
+            'blackholes.five-ten-sg.com',
+            'sorbs.dnsbl.net.au',
+            'dnsbl.sorbs.net',
+            'zen.spamhaus.org' if self._dqsKey == "" else "".join([self._dqsKey, ".zen.dq.spamhaus.net"]),
+            'db.wpbl.info',
+            'rmst.dnsbl.net.au',
+            'dnsbl.kempt.net',
+            'blacklist.woody.ch',
+            'psbl.surriel.com',
+            'virbl.bit.nl',
+            'virus.rbl.jp',
+            'wormrbl.imp.ch',
+            'spamrbl.imp.ch',
+            'rbl.interserver.net',
+            'spamlist.or.kr',
+            'dyna.spamrats.com',
+            'dnsbl.abuse.ch',
+            'dnsbl.inps.de',
+            'dnsbl.dronebl.org',
+            'bl.deadbeef.com',
+            'ricn.dnsbl.net.au',
+            'forbidden.icm.edu.pl',
+            'probes.dnsbl.net.au',
+            'ubl.unsubscore.com',
+            'b.barracudacentral.org',
+            'ksi.dnsbl.net.au',
+            'uribl.swinog.ch',
+            'bsb.spamlookup.net',
+            'dob.sibl.support-intelligence.net',
+            'url.rbl.jp',
+            'dyndns.rbl.jp',
+            'bogons.cymru.com',
+            'relays.mail-abuse.org',
+            'omrs.dnsbl.net.au',
+            'osrs.dnsbl.net.au',
+            'orvedb.aupads.org',
+            'relays.nether.net',
+            'relays.bl.gweep.ca',
+            'smtp.dnsbl.sorbs.net',
+            'relays.bl.kundenserver.de',
+            'dialups.mail-abuse.org',
+            'rdts.dnsbl.net.au',
+            'spam.dnsbl.sorbs.net',
+            'duinv.aupads.org',
+            'dynablock.sorbs.net',
+            'dynip.rothen.com',
+            'short.rbl.jp',
+            'korea.services.net',
+            'mail.people.it',
+            'blacklist.sci.kun.nl',
+            'all.spamblock.unit.liu.se'
+        ]
