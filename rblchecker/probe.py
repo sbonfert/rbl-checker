@@ -92,7 +92,6 @@ class Probe(object):
     def initializeRBLs(self):
         self.RBLs = [
             'zombie.dnsbl.sorbs.net',
-            'ix.dnsbl.manitu.net',
             'bl.spamcop.net',
             'dsn.rfc-ignorant.org',
             'multi.surbl.org',
