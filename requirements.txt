@@ -9,6 +9,6 @@ oauthlib==3.2.2
 PyYAML==6.0.1
 requests==2.32.3
 requests-oauthlib==2.0.0
-setuptools==70.2.0
+setuptools==78.1.1
 urllib3==2.2.2
 wheel==0.43.0
